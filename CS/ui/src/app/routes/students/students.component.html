@@ -1,0 +1,117 @@
+<app-header [title]="title.getTitle()"> <button tuiIconButton iconStart="@tui.plus" size="m"
+    tuiHint="Добавить нового студента" (click)="createDialogOpen(createDialog)"></button></app-header>
+
+<body>
+  <form [formGroup]="studentsForm" class="w-full">
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport #viewport appendOnly tuiScrollable class="viewport tui-zero-scrollbar"
+        [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
+        <table tuiTable size="l" [style.margin-bottom]="'6rem'">
+          <thead tuiThead>
+            <tr>
+              <th tuiTh>ФИО</th>
+              <th tuiTh>Дата рождения</th>
+              <th tuiTh>Группа</th>
+              <th tuiTh>Курс</th>
+              <th tuiTh>Форма обучения</th>
+              <th tuiTh>Форма поступления</th>
+              <th tuiTh>Статус</th>
+            </tr>
+          </thead>
+          <tbody tuiTbody formArrayName="list">
+            <tr *ngFor="let student of studentList.controls; let i = index" formGroupName="{{i}}"
+              #dropdown="tuiDropdown" tuiDropdownContext [tuiDropdown]="contextMenu">
+              <td tuiTd>
+                <span>{{getFieldValue(student, 'fullname')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(student, 'birthday')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(student, 'group')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(student, 'course')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(student, 'formStudy')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(student, 'formAdmission')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(student, 'statusStudy')}}</span>
+              </td>
+
+              <ng-template #contextMenu let-close>
+                <tui-data-list role="menu" tuiDataListDropdownManager class="context-menu">
+                  <button tuiOption type="button"
+                    (click)="editDialogOpen(i, createDialog);dropdown.toggle(false)">Изменить</button>
+                  <button tuiOption type="button" (click)="deleteDialogOpen(i) ;dropdown.toggle(false)">Удалить</button>
+                </tui-data-list>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </form>
+</body>
+
+
+<ng-template #createDialog>
+  <form [formGroup]="newStudent" class="dialog">
+    <div>
+      <tui-textfield class="fullname">
+        <label tuiLabel>ФИО</label>
+        <input tuiTextfield formControlName="fullname" />
+      </tui-textfield>
+
+      <tui-input-date formControlName="birthday">
+        Дата рождения
+        <input tuiTextfieldLegacy />
+      </tui-input-date>
+    </div>
+
+    <div>
+      <tui-combo-box formControlName="group" [stringify]="stringify" [tuiTextfieldCleaner]="true">Группа
+        <tui-data-list-wrapper *tuiDataList [itemContent]="stringify | tuiStringifyContent"
+          [items]="groupList | tuiFilterByInput"></tui-data-list-wrapper>
+      </tui-combo-box>
+      <tui-textfield [tuiTextfieldCleaner]="false">
+        <input tuiInputNumber formControlName="course" [min]="1" [max]="5" />
+      </tui-textfield>
+    </div>
+
+    <div>
+      <tui-input-date formControlName="dayEnrollment">
+        Дата зачисления
+        <input tuiTextfieldLegacy />
+      </tui-input-date>
+
+      <tui-combo-box class="fullname" formControlName="statusStudy" [stringify]="stringify">Статус
+        <tui-data-list-wrapper *tuiDataList [itemContent]="stringify | tuiStringifyContent"
+          [items]="statusStudentList | tuiFilterByInput"></tui-data-list-wrapper>
+      </tui-combo-box>
+    </div>
+
+
+    <div>
+      <tui-combo-box formControlName="formStudy" [stringify]="stringify">Форма обучения
+        <tui-data-list-wrapper *tuiDataList [itemContent]="stringify | tuiStringifyContent"
+          [items]="formStudyList | tuiFilterByInput"></tui-data-list-wrapper>
+      </tui-combo-box>
+
+      <tui-combo-box formControlName="formAdmission" [stringify]="stringify">Форма поступления
+        <tui-data-list-wrapper *tuiDataList [itemContent]="stringify | tuiStringifyContent"
+          [items]="formAdmissionList | tuiFilterByInput"></tui-data-list-wrapper>
+      </tui-combo-box>
+    </div>
+
+    <tui-combo-box formControlName="statusBenefit" [stringify]="stringify" [tuiTextfieldCleaner]="true">Льготная группа
+      <tui-data-list-wrapper *tuiDataList [itemContent]="stringify | tuiStringifyContent"
+        [items]="statusBenefitList | tuiFilterByInput"></tui-data-list-wrapper>
+    </tui-combo-box>
+
+  </form>
+</ng-template>

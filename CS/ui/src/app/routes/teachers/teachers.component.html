@@ -1,0 +1,95 @@
+<app-header [title]="title.getTitle()"> <button tuiIconButton iconStart="@tui.plus" size="m"
+    tuiHint="Добавить нового преподавателя" (click)="createDialogOpen(createDialog)"></button></app-header>
+
+<body>
+  <form [formGroup]="teacherForm" class="w-full">
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport #viewport appendOnly tuiScrollable class="viewport tui-zero-scrollbar"
+        [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
+        <table tuiTable size="l" [style.margin-bottom]="'6rem'">
+          <thead tuiThead>
+            <tr>
+              <th tuiTh>ФИО</th>
+              <th tuiTh>Дата рождения</th>
+              <th tuiTh>Должность</th>
+              <th tuiTh>Научный статус</th>
+              <th tuiTh>Дата вступления в должность</th>
+              <th tuiTh>Дата приема на работу</th>
+            </tr>
+          </thead>
+          <tbody tuiTbody formArrayName="list">
+            <tr *ngFor="let teacher of teacherList.controls; let i = index" formGroupName="{{i}}"
+              #dropdown="tuiDropdown" tuiDropdownContext [tuiDropdown]="contextMenu">
+              <td tuiTd>
+                <span>{{getFieldValue(teacher, 'fullname')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(teacher, 'birthday')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(teacher, 'position')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(teacher, 'statusScientific')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(teacher, 'dayAppointment')}}</span>
+              </td>
+              <td tuiTd>
+                <span>{{getFieldValue(teacher, 'dayHiring')}}</span>
+              </td>
+
+              <ng-template #contextMenu let-close>
+                <tui-data-list role="menu" tuiDataListDropdownManager class="context-menu">
+                  <button tuiOption type="button"
+                    (click)="editDialogOpen(i, createDialog);dropdown.toggle(false)">Изменить</button>
+                  <button tuiOption type="button" (click)="deleteDialogOpen(i) ;dropdown.toggle(false)">Удалить</button>
+                </tui-data-list>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </form>
+</body>
+
+<ng-template #createDialog>
+  <form [formGroup]="newTeacher" class="dialog">
+    <div>
+      <tui-textfield class="fullname">
+        <label tuiLabel>ФИО</label>
+        <input tuiTextfield formControlName="fullname" />
+      </tui-textfield>
+
+      <tui-input-date formControlName="birthday">
+        Дата рождения
+        <input tuiTextfieldLegacy />
+      </tui-input-date>
+    </div>
+
+    <div>
+      <tui-combo-box formControlName="position" [stringify]="stringify" [tuiTextfieldCleaner]="true">Должность
+        <tui-data-list-wrapper *tuiDataList [itemContent]="stringify | tuiStringifyContent"
+          [items]="positionList | tuiFilterByInput"></tui-data-list-wrapper>
+      </tui-combo-box>
+
+      <tui-combo-box formControlName="statusScientific" [stringify]="stringify" [tuiTextfieldCleaner]="true">Научный
+        статус
+        <tui-data-list-wrapper *tuiDataList [itemContent]="stringify | tuiStringifyContent"
+          [items]="statusScientificList | tuiFilterByInput"></tui-data-list-wrapper>
+      </tui-combo-box>
+    </div>
+
+    <div>
+      <tui-input-date formControlName="dayAppointment">
+        Дата вступления в должность
+        <input tuiTextfieldLegacy />
+      </tui-input-date>
+      <tui-input-date formControlName="dayHiring">
+        Дата приема на работу
+        <input tuiTextfieldLegacy />
+      </tui-input-date>
+    </div>
+  </form>
+</ng-template>

@@ -1,0 +1,9 @@
+<header></header>
+<main>
+  <ng-container *ngFor="let item of menuList">
+    <button tuiButton [iconStart]="item.icon" #rla="routerLinkActive" routerLinkActive
+      [appearance]="rla.isActive ? 'menuButton-active' : 'menuButton'" [routerLink]="item.link"
+      [disabled]="item.disabled" [tuiHint]="item.title">{{ menuStage() ? item.title : '' }}</button>
+  </ng-container>
+</main>
+<footer></footer>

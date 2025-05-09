@@ -1,0 +1,50 @@
+@import 'node_modules/@taiga-ui/core/styles/taiga-ui-local.scss';
+
+:host {
+  background-color: cyan;
+
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  min-height: 4rem;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+[tuiAppearance] {
+
+  &[data-appearance='menuButton'],
+  &[data-appearance='menuButton-active'] {
+    color: white;
+    border-radius: unset;
+
+    width: 4rem;
+    height: 4rem;
+
+    &[tuiIcons] {
+
+      &::before,
+      &::after {
+        font-size: 2rem;
+      }
+
+    }
+  }
+
+  &[data-appearance='menuButton'] {
+    @include appearance-hover {
+      color: var(--tui-chart-categorical-09);
+      background: var(--tui-chart-categorical-14);
+    }
+  }
+
+  &[data-appearance='menuButton-active'] {
+    color: var(--tui-chart-categorical-08);
+    background: var(--tui-chart-categorical-10);
+  }
+}

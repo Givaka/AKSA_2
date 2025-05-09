@@ -1,0 +1,47 @@
+<app-header [title]="title.getTitle()">
+  <button tuiIconButton iconStart="@tui.plus" size="m" tuiHint="Добавить кафедру"
+    (click)="createDialogOpen(createDialog)"></button>
+</app-header>
+
+<body>
+  <form [formGroup]="departmentsForm">
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport #viewport appendOnly tuiScrollable class="viewport tui-zero-scrollbar"
+        [itemSize]="45" [maxBufferPx]="500" [minBufferPx]="400">
+        <table tuiTable size="l" [style.margin-bottom]="'6rem'">
+          <thead tuiThead>
+            <tr>
+              <th tuiTh>Наименование</th>
+            </tr>
+          </thead>
+          <tbody tuiTbody formArrayName="list">
+            <tr *ngFor="let department of departmentsList.controls; let i = index" formGroupName="{{i}}"
+              #dropdown="tuiDropdown" tuiDropdownContext [tuiDropdown]="contextMenu">
+              <td tuiTd>
+                <span>{{getFieldValue(department, 'name')}}</span>
+              </td>
+
+              <ng-template #contextMenu let-close>
+                <tui-data-list role="menu" tuiDataListDropdownManager class="context-menu">
+                  <button tuiOption type="button"
+                    (click)="editDialogOpen(i, createDialog);dropdown.toggle(false)">Переименовать</button>
+                  <button tuiOption type="button" (click)="deleteDialogOpen(i) ;dropdown.toggle(false)">Удалить</button>
+                </tui-data-list>
+              </ng-template>
+            </tr>
+
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </form>
+</body>
+
+<ng-template #createDialog>
+  <form [formGroup]="newDepartment">
+    <tui-textfield>
+      <label tuiLabel>Название кафедры</label>
+      <input tuiTextfield formControlName="name" />
+    </tui-textfield>
+  </form>
+</ng-template>
